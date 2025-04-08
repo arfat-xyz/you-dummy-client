@@ -1,12 +1,13 @@
+"use client";
 import JumbotronComponent from "@/components/jumbotron";
 import React from "react";
 
-const MainPage = () => {
+const LoginPage = () => {
   return (
     <>
-      <JumbotronComponent text="Online Market Place" />
+      <JumbotronComponent text="Login" />
     </>
   );
 };
 
-export default MainPage;
+export default LoginPage;
