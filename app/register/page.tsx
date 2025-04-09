@@ -3,8 +3,12 @@ import JumbotronComponent from "@/components/jumbotron";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import axios from "axios";
 import { registerUserZodSchema } from "@/lib/zod/user-zod-validation";
+import axiosInstance from "@/lib/axios-instance";
+import { useState } from "react";
+import { toast } from "react-toastify";
+import SpinnerLoader from "@/components/loader";
+import Link from "next/link";
 
 // Define the validation schema using Zod
 
@@ -15,17 +19,24 @@ const RegisterPage = () => {
   const {
     control,
     handleSubmit,
+    reset,
     formState: { errors },
   } = useForm<FormData>({
     resolver: zodResolver(registerUserZodSchema), // Connect Zod schema with react-hook-form
   });
+  const [isLoading, setIsLoading] = useState(false);
 
   const onSubmit = async (inputs: FormData) => {
-    const data = await axios.post(
-      `http://localhost:5000/api/v1/auth/register`,
-      inputs
-    );
-    console.log({ data });
+    try {
+      setIsLoading(true);
+      const { data } = await axiosInstance.post(`/auth/register`, inputs);
+      if (data?.success) toast.success(data?.message);
+      reset();
+    } catch (error) {
+      console.log("response error", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -114,13 +125,20 @@ const RegisterPage = () => {
 
           <div className="mt-4 text-center">
             <button
+              disabled={isLoading}
               type="submit"
-              className="w-full px-4 py-2 bg-primary text-white font-semibold rounded-md hover:text-primary hover:bg-white border border-transparent hover:border-primary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/60"
+              className="w-full flex justify-center items-center gap-2 px-4 py-2 bg-primary text-white font-semibold disabled:bg-primary-foreground rounded-md hover:text-primary hover:bg-white border border-transparent hover:border-primary transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-primary/60"
             >
-              Register
+              Register {isLoading ? <SpinnerLoader size={16} /> : ""}
             </button>
           </div>
         </form>
+        <p className="text-center p-3">
+          Already registered?{" "}
+          <Link href={`/login`} className="text-blue-500">
+            Login
+          </Link>
+        </p>
       </div>
     </>
   );
