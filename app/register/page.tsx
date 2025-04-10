@@ -1,19 +1,16 @@
 "use client";
 import JumbotronComponent from "@/components/jumbotron";
 import { Controller, useForm } from "react-hook-form";
-import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { registerUserZodSchema } from "@/lib/zod/user-zod-validation";
+import {
+  RegisterUserFormData,
+  registerUserZodSchema,
+} from "@/lib/zod/user-zod-validation";
 import axiosInstance from "@/lib/axios-instance";
 import { useState } from "react";
 import { toast } from "react-toastify";
 import SpinnerLoader from "@/components/loader";
 import Link from "next/link";
-
-// Define the validation schema using Zod
-
-// Infer the types from the schema
-type FormData = z.infer<typeof registerUserZodSchema>;
 
 const RegisterPage = () => {
   const {
@@ -21,12 +18,12 @@ const RegisterPage = () => {
     handleSubmit,
     reset,
     formState: { errors },
-  } = useForm<FormData>({
+  } = useForm<RegisterUserFormData>({
     resolver: zodResolver(registerUserZodSchema), // Connect Zod schema with react-hook-form
   });
   const [isLoading, setIsLoading] = useState(false);
 
-  const onSubmit = async (inputs: FormData) => {
+  const onSubmit = async (inputs: RegisterUserFormData) => {
     try {
       setIsLoading(true);
       const { data } = await axiosInstance.post(`/auth/register`, inputs);

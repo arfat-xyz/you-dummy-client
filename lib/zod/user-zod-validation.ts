@@ -24,3 +24,14 @@ export const registerUserZodSchema = z.object({
   email: stringValidation("Email").email({ message: "Invalid email address" }),
   password: passwordSchema,
 });
+
+// Infer the types from the schema for registration form
+export type RegisterUserFormData = z.infer<typeof registerUserZodSchema>;
+
+export const loginUserZodSchema = z.object({
+  email: stringValidation("Email").email({ message: "Invalid email address" }),
+  password: passwordSchema,
+});
+
+// Infer the types from the schema for login form
+export type LoginUserFormData = z.infer<typeof loginUserZodSchema>;
