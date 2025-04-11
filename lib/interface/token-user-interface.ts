@@ -2,6 +2,7 @@ export type ITokenUser = {
   role: ["Subscriber" | "Instructor" | "Admin"];
   name: string;
   email: string;
+  _id: string;
 };
 
 export type IUser = {

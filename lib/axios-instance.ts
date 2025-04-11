@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 // Create Axios instance
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API, // Your API base URL
+  withCredentials: true,
 });
 
 // Response interceptor for formatting data with type validation

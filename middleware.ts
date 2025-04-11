@@ -5,7 +5,7 @@ import { ITokenUser } from "./lib/interface/token-user-interface";
 
 // Define the matcher to run the middleware only on specific routes
 export const config = {
-  matcher: ["/login", "/register", "/dashboard", "/"],
+  matcher: ["/login", "/register", "/user", "/"],
 };
 
 export default async function middleware(request: NextRequest) {
@@ -14,14 +14,17 @@ export default async function middleware(request: NextRequest) {
   // Extract the token using NextAuth's JWT utility
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
-
-  // For login and register pages: redirect to dashboard if user is logged in
-  if ((pathname === "/login" || pathname === "/register") && token) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
+  if (pathname === "/user" && !token) {
+    return NextResponse.redirect(new URL("/?auth=false", request.url));
   }
 
-  // For dashboard page: redirect to login if no token
-  if (pathname === "/dashboard" && !token) {
+  // For login and register pages: redirect to user if user is logged in
+  if ((pathname === "/login" || pathname === "/register") && token) {
+    return NextResponse.redirect(new URL("/", request.url));
+  }
+
+  // For user page: redirect to login if no token
+  if (pathname === "/user" && !token) {
     return NextResponse.redirect(new URL("/login", request.url));
   }
 

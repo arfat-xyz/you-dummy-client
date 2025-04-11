@@ -3,6 +3,7 @@ import React, { ReactNode, useEffect } from "react";
 import { Bounce, ToastContainer } from "react-toastify";
 import TopNav from "./top-nav";
 import { useAuth } from "..";
+import { removeTokenFromCookie } from "@/lib/handle-cookie";
 
 const MainLayoutClientComponent = ({ children }: { children: ReactNode }) => {
   const { login } = useAuth();
@@ -11,9 +12,11 @@ const MainLayoutClientComponent = ({ children }: { children: ReactNode }) => {
     const storedUser = JSON.parse(
       window.localStorage.getItem("user") || "null"
     );
-    if (storedUser) {
-      login(storedUser);
+    if (storedUser === null) {
+      removeTokenFromCookie();
+      return;
     }
+    login(storedUser);
   }, []);
   return (
     <>
