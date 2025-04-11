@@ -135,7 +135,7 @@ const RegisterPage = () => {
           <Link href={`/login`} className="text-blue-500">
             Login
           </Link>
-        </p>{" "}
+        </p>
         <p className="text-center ">
           <Link href={"/forgot-password"}>
             <span className="text-blue-500">Forget password</span>

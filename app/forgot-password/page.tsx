@@ -10,6 +10,7 @@ import {
 import JumbotronComponent from "@/components/jumbotron";
 import { useState } from "react";
 import { ForgotPasswordForm } from "@/lib/zod/user-zod-validation";
+import Link from "next/link";
 
 const ForgotPassword = () => {
   // State
@@ -143,6 +144,12 @@ const ForgotPassword = () => {
               )}
             </button>
           </div>
+          <p className="text-center">
+            {`Don't want to reset? `}
+            <Link href={`/login`} className="text-blue-500">
+              Login
+            </Link>
+          </p>
           {!success ? (
             <>
               <p className="text-center ">
@@ -152,7 +159,7 @@ const ForgotPassword = () => {
                   onClick={() => setSuccess(true)}
                   className="text-blue-500"
                 >
-                  click here
+                  Click Here
                 </button>
               </p>
             </>

@@ -12,6 +12,8 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { CiBookmarkCheck } from "react-icons/ci";
+import { FaUsersRays } from "react-icons/fa6";
 import { CiLogin } from "react-icons/ci";
 import { MdApps } from "react-icons/md";
 import { FaUser } from "react-icons/fa";
@@ -53,22 +55,88 @@ export default function TopNav() {
         <NavigationMenuList>
           {user ? (
             <>
+              {user?.role.includes("Instructor") ? (
+                <>
+                  <NavigationMenuItem>
+                    <Link href="/instructor" legacyBehavior passHref>
+                      <NavigationMenuLink
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          isActive("/instructor")
+                        )}
+                      >
+                        <MdApps className="mr-2" />
+                        Instructor
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                  <NavigationMenuItem>
+                    <Link
+                      href="/instructor/course/create"
+                      legacyBehavior
+                      passHref
+                    >
+                      <NavigationMenuLink
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          isActive("/instructor/course/create")
+                        )}
+                      >
+                        <CiBookmarkCheck className="mr-2" />
+                        Create Course
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                </>
+              ) : (
+                <>
+                  <NavigationMenuItem>
+                    <Link
+                      href="/user/become-instructor"
+                      legacyBehavior
+                      passHref
+                    >
+                      <NavigationMenuLink
+                        className={cn(
+                          navigationMenuTriggerStyle(),
+                          isActive("/user/become-instructor")
+                        )}
+                      >
+                        <FaUsersRays className="mr-2" />
+                        Become Instructor
+                      </NavigationMenuLink>
+                    </Link>
+                  </NavigationMenuItem>
+                </>
+              )}
               <NavigationMenuItem>
-                <NavigationMenuTrigger className="w-24">
+                <NavigationMenuTrigger className="min-w-24">
                   <p className="truncate w-20">
                     <span className="w-full flex  flex-row items-center gap-2 justify-start">
-                      <FaCoffee /> {user.name}
+                      <FaCoffee /> {user.name.slice(0, 4)}
                     </span>
                   </p>
                 </NavigationMenuTrigger>
                 <NavigationMenuContent>
-                  <NavigationMenu orientation="horizontal">
-                    <NavigationMenuList className="w-full flex flex-col">
+                  <NavigationMenu orientation="horizontal" className="min-w-32">
+                    <NavigationMenuList className="w-full flex flex-col text-start">
+                      <NavigationMenuItem className="text-start">
+                        <NavigationMenuLink
+                          className={cn(
+                            navigationMenuTriggerStyle(),
+                            "cursor-pointer flex justify-start items-start"
+                          )}
+                          href="/user"
+                        >
+                          <FaUser className="mr-2" />
+                          user
+                        </NavigationMenuLink>
+                      </NavigationMenuItem>
                       <NavigationMenuItem>
                         <NavigationMenuLink
                           className={cn(
                             navigationMenuTriggerStyle(),
-                            "cursor-pointer"
+                            "cursor-pointer items-start"
                           )}
                           onClick={logoutFunction}
                         >

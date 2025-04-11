@@ -42,7 +42,7 @@ const LoginPage = () => {
           password: "",
         });
         frontendSuccessResponse(data?.message);
-        router.push(`/`);
+        router.push(`/user`);
         return;
       }
       return frontendErrorResponse(data?.message);

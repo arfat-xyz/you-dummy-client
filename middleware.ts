@@ -9,7 +9,7 @@ const ROUTES = {
   public: ["/", "/contact"],
 
   // Routes that require a valid token to access
-  protected: ["/user", "/dashboard"],
+  protected: ["/user", "/instructor", "/stripe"],
 
   // Routes that are only accessible when there is no token (login, register, forgot-password)
   noTokenRequired: ["/login", "/register", "/forgot-password"],
@@ -23,6 +23,7 @@ export const config = {
     "/user",
     "/dashboard",
     "/contact",
+    "/instructor",
     "/",
   ],
 };
@@ -64,6 +65,15 @@ export default async function middleware(request: NextRequest) {
       if (!user?.email) {
         return NextResponse.redirect(new URL("/login", request.url));
       }
+
+      // Additional role-based check for /instructor route
+      if (
+        pathname.startsWith("/instructor") &&
+        !user.role.includes("Instructor")
+      ) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
     } catch (e) {
       // If there's an error decoding the token, redirect to login
