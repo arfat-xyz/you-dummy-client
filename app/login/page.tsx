@@ -120,11 +120,15 @@ const LoginPage = () => {
             </button>
           </div>
         </form>
-
         <p className="text-center p-3">
           New here?{" "}
           <Link href={`/register`} className="text-blue-500">
             Register
+          </Link>
+        </p>{" "}
+        <p className="text-center ">
+          <Link href={"/forgot-password"}>
+            <span className="text-blue-500">Forget password</span>
           </Link>
         </p>
       </div>

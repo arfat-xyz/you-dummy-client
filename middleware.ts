@@ -3,45 +3,70 @@ import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 import { ITokenUser } from "./lib/interface/token-user-interface";
 
-// Define the matcher to run the middleware only on specific routes
+// Define route conditions for different types of routes
+const ROUTES = {
+  // Public routes: accessible to everyone (authenticated and unauthenticated users)
+  public: ["/", "/contact"],
+
+  // Routes that require a valid token to access
+  protected: ["/user", "/dashboard"],
+
+  // Routes that are only accessible when there is no token (login, register, forgot-password)
+  noTokenRequired: ["/login", "/register", "/forgot-password"],
+};
+
 export const config = {
-  matcher: ["/login", "/register", "/user", "/"],
+  matcher: [
+    "/login",
+    "/register",
+    "/forgot-password",
+    "/user",
+    "/dashboard",
+    "/contact",
+    "/",
+  ],
 };
 
 export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
-
-  // Extract the token using NextAuth's JWT utility
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
-  if (pathname === "/user" && !token) {
-    return NextResponse.redirect(new URL("/?auth=false", request.url));
+
+  // Check if the route is public (accessible for both authenticated and unauthenticated users)
+  if (ROUTES.public.includes(pathname)) {
+    return NextResponse.next();
   }
 
-  // For login and register pages: redirect to user if user is logged in
-  if ((pathname === "/login" || pathname === "/register") && token) {
+  // Check if the route is no-token-required (only accessible if there is no token)
+  if (ROUTES.noTokenRequired.includes(pathname) && token) {
+    // If there is a token, redirect to home page or a different page
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // For user page: redirect to login if no token
-  if (pathname === "/user" && !token) {
+  // Check if the route is protected (requires a valid token to access)
+  if (ROUTES.protected.some((route) => pathname.startsWith(route)) && !token) {
+    // Redirect to login page if there is no token for protected routes
     return NextResponse.redirect(new URL("/login", request.url));
   }
 
-  // If a token exists, decode it
+  // If there is a token, decode it and validate it
   if (token) {
-    const decodedToken = jwt.decode(token);
+    try {
+      const decodedToken = jwt.decode(token);
 
-    // Check if the decoded token is valid and matches ITokenUser type
-    if (!decodedToken || typeof decodedToken !== "object") {
-      return NextResponse.redirect(new URL("/login", request.url));
-    }
+      // If the token is invalid or doesn't contain the expected data, redirect to login
+      if (!decodedToken || typeof decodedToken !== "object") {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
 
-    // Cast to ITokenUser
-    const user: ITokenUser = decodedToken as ITokenUser;
-
-    // Ensure user has a valid email (or other user-specific checks)
-    if (!user?.email) {
+      // Cast to ITokenUser and ensure the user has the required data
+      const user: ITokenUser = decodedToken as ITokenUser;
+      if (!user?.email) {
+        return NextResponse.redirect(new URL("/login", request.url));
+      }
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (e) {
+      // If there's an error decoding the token, redirect to login
       return NextResponse.redirect(new URL("/login", request.url));
     }
   }
