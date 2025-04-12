@@ -129,7 +129,7 @@ export default function TopNav() {
                           href="/user"
                         >
                           <FaUser className="mr-2" />
-                          user
+                          Dashboard
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                       <NavigationMenuItem>

@@ -1,0 +1,139 @@
+"use client";
+import { CustomToolTipComponent } from "@/components/custom-tooltip";
+import JumbotronComponent from "@/components/jumbotron";
+import axiosInstance from "@/lib/axios-instance";
+import { CourseWithIdAndInstructorNameAndId } from "@/lib/interface/course";
+import Link from "next/link";
+import { useEffect, useState } from "react";
+import { FaCheck } from "react-icons/fa6";
+import { HiMiniPencilSquare } from "react-icons/hi2";
+import Image from "next/image";
+import SpinnerLoader from "@/components/loader";
+import ReactRemarkdownDataVisualComponent from "@/components/react-markdown-data-visual-component";
+import AddORUpdateLesson from "@/components/instructor/add-or-update-lession";
+
+const SingleInstructorCourse = ({
+  params: { slug },
+}: {
+  params: { slug: string };
+}) => {
+  const [course, setCourse] = useState<CourseWithIdAndInstructorNameAndId>();
+  const [isLoading, setIsLoading] = useState(true);
+
+  const [students, setStudents] = useState(0);
+
+  useEffect(() => {
+    loadCourse();
+  }, [slug]);
+
+  const loadCourse = async () => {
+    try {
+      setIsLoading(true);
+      const { data } = await axiosInstance.get(`/course/single-course/${slug}`);
+      console.log({ data: data.data });
+      if (data?.success) {
+        setCourse(data?.data);
+      }
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  return (
+    <>
+      {isLoading && !course?.name ? (
+        <div className="w-full min-h-[calc(100vh-60px)] flex justify-center items-center">
+          <SpinnerLoader size={40} />
+        </div>
+      ) : (
+        <>
+          <JumbotronComponent text={course?.name as string} />
+
+          <div className="w-full pt-2">
+            <div className=" pt-4 grid grid-cols-12">
+              <Image
+                width={80}
+                height={80}
+                src={
+                  course?.image
+                    ? course?.image
+                    : "https://i.ibb.co.com/HYf5r66/arfat-rahman-21.jpg"
+                }
+                alt="Course Image"
+                className="size-20 rounded-full col-span-2"
+              />
+              <div className="ml-4 w-full col-span-10">
+                <div className="w-full">
+                  <div className="grid grid-cols-[1fr_70px]">
+                    <h5 className="mt-2 text-blue-500">{course?.name}</h5>
+                    <div className="flex justify-center items-start gap-2 pt-4 w-1/3">
+                      {/* Add any buttons or actions here */}
+
+                      <CustomToolTipComponent
+                        toolValue={`Publish`}
+                        triggerer={
+                          <Link href={`/instructor/course/edit/${slug}`}>
+                            <FaCheck />
+                          </Link>
+                        }
+                      />
+                      <CustomToolTipComponent
+                        toolValue={`Edit`}
+                        triggerer={
+                          <Link href={`/instructor/course/edit/${slug}`}>
+                            <HiMiniPencilSquare />
+                          </Link>
+                        }
+                      />
+                      {/* <IoClose /> */}
+                    </div>
+                  </div>
+                  <p className="text-sm mt-1">
+                    {course?.lessons?.length} Lessons
+                  </p>
+                  <p className="text-xs mt-1">{course?.category}</p>
+                </div>{" "}
+              </div>
+              <div className="col-span-12">
+                <p className="text-xs mt-4 overflow-hidden">
+                  <ReactRemarkdownDataVisualComponent
+                    context={course?.description as string}
+                  />
+                </p>
+              </div>
+            </div>
+            <hr className="mt-4" />
+
+            <div className="text-center mt-4">
+              <AddORUpdateLesson
+                slug={slug}
+                setCourse={setCourse}
+                instructorId={course?.instructor._id as string}
+              />
+            </div>
+
+            <div className="w-full mt-6">
+              <h4 className="text-xl font-bold">
+                {course?.lessons?.length} Lessons
+              </h4>
+              <div className="space-y-4 mt-4">
+                {course?.lessons?.map((item, index) => (
+                  <div key={index} className="flex items-center">
+                    <div className="w-10 h-10 bg-gray-300 rounded-full flex justify-center items-center">
+                      <span>{index + 1}</span>
+                    </div>
+                    <div className="ml-4">
+                      <h6 className="text-lg font-semibold">{item.title}</h6>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </>
+      )}
+    </>
+  );
+};
+
+export default SingleInstructorCourse;

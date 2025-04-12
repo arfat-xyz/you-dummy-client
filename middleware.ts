@@ -20,11 +20,11 @@ export const config = {
     "/login",
     "/register",
     "/forgot-password",
-    "/user",
-    "/dashboard",
+    "/user/:path*",
+    "/dashboard/:path*",
+    "/instructor/:path*",
     "/contact",
-    "/instructor",
-    "/",
+    "/", // Note: this applies middleware to root route as well
   ],
 };
 

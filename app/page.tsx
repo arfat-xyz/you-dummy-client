@@ -5,7 +5,9 @@ import { useEffect } from "react";
 
 const MainPage = ({ searchParams }: { searchParams: { auth: string } }) => {
   const handleRequest = async () => {
-    const { data } = await axiosInstance.get(`/auth/send-test-email`);
+    const { data } = await axiosInstance.get(
+      `/course/instructor-courses?name=rahman&limit=10`
+    );
     console.log(data);
   };
   useEffect(() => {

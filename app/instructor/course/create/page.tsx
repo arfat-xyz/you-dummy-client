@@ -1,13 +1,19 @@
 "use client";
-import JumbotronComponent from "@/components/jumbotron";
-import React from "react";
 
-const CreateCoursePage = () => {
+import CourseCreateForm from "@/components/instructor/course-create-form";
+import JumbotronComponent from "@/components/jumbotron";
+
+// Define types for the state values
+
+const CourseCreate = () => {
   return (
     <>
-      <JumbotronComponent text="Create course" />
+      <JumbotronComponent text="Create Course" />
+      <div className="px-4 py-6">
+        <CourseCreateForm />
+      </div>
     </>
   );
 };
 
-export default CreateCoursePage;
+export default CourseCreate;
