@@ -8,7 +8,7 @@ import { frontendErrorResponse } from "@/lib/frontend-toast-response";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import SpinnerLoader from "../loader";
-const UserLayoutClientComponent = ({ children }: { children: ReactNode }) => {
+const UserClientComponent = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
   // const { user } = useAuth();
@@ -53,4 +53,4 @@ const UserLayoutClientComponent = ({ children }: { children: ReactNode }) => {
   );
 };
 
-export default UserLayoutClientComponent;
+export default UserClientComponent;
