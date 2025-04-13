@@ -11,6 +11,8 @@ export interface CourseCreateState {
   paid: boolean;
   loading: boolean;
   published: boolean;
+  createdAt?: Date | string;
+  updatedAt?: Date | string;
 }
 
 export interface CourseWithId extends CourseCreateState {

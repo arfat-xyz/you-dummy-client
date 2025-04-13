@@ -14,6 +14,7 @@ import { BsQuestionCircle } from "react-icons/bs";
 import { CheckSquare } from "lucide-react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { frontendSuccessResponse } from "@/lib/frontend-toast-response";
+import SingleCourseSkeletonLoader from "@/components/single-course-skeleton-loader";
 
 const SingleInstructorCourse = ({
   params: { slug },
@@ -68,9 +69,7 @@ const SingleInstructorCourse = ({
   return (
     <>
       {isLoading && !course ? (
-        <div className="w-full min-h-[calc(100vh-60px)] flex justify-center items-center">
-          <SpinnerLoader size={40} />
-        </div>
+        <SingleCourseSkeletonLoader />
       ) : (
         <>
           <JumbotronComponent text={course?.name as string} />
@@ -172,7 +171,7 @@ const SingleInstructorCourse = ({
               <div className="col-span-12">
                 <p className="text-xs mt-4 overflow-hidden">
                   <ReactRemarkdownDataVisualComponent
-                    context={course?.description as string}
+                    context={course?.description || ""}
                   />
                 </p>
               </div>

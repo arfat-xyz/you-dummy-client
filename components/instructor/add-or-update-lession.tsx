@@ -73,6 +73,7 @@ const AddORUpdateLesson = ({
         title: lession.title,
         content: lession.content,
         video: lession.video,
+        free_preview: lession.free_preview, // ✅ Add this
       });
       setPreviewURL(lession.video || "");
     }
@@ -198,6 +199,18 @@ const AddORUpdateLesson = ({
                 {errors.video.message}
               </p>
             )}
+          </div>
+          {/* Free Preview Checkbox */}
+          <div className="flex items-center gap-2">
+            <input
+              type="checkbox"
+              {...register("free_preview")}
+              className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+              id="free_preview"
+            />
+            <label htmlFor="free_preview" className="text-sm font-medium">
+              Free Preview
+            </label>
           </div>
 
           {/* Video Preview */}

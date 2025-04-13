@@ -60,7 +60,7 @@ const InstructorPage = () => {
         {courses.map((course) => (
           <div
             key={course._id}
-            className="flex p-4 bg-white shadow-sm rounded-xl items-start gap-4"
+            className="p-4 bg-white shadow-sm rounded-xl grid grid-cols-[80px_1fr_40px] gap-4"
           >
             <Image
               width={80}
@@ -95,28 +95,28 @@ const InstructorPage = () => {
                     </p>
                   )}
                 </div>
-                <div className="flex items-center justify-center w-10 h-10">
-                  {course.published ? (
-                    <CustomToolTipComponent
-                      toolValue="Published"
-                      triggerer={
-                        <span className="text-green-600" title="Published">
-                          <FaCheck className="text-green-600 size-4" />
-                        </span> 
-                      }
-                    />
-                  ) : (
-                    <CustomToolTipComponent
-                      toolValue="Unpublished"
-                      triggerer={
-                        <span className="text-yellow-500" title="Unpublished">
-                          <RxCross2 className="text-red-600 size-4" />
-                        </span>
-                      }
-                    />
-                  )}
-                </div>
               </div>
+            </div>
+            <div className="flex justify-center items-center">
+              {course.published ? (
+                <CustomToolTipComponent
+                  toolValue="Published"
+                  triggerer={
+                    <span className="text-green-600" title="Published">
+                      <FaCheck className="text-green-600 size-4" />
+                    </span>
+                  }
+                />
+              ) : (
+                <CustomToolTipComponent
+                  toolValue="Unpublished"
+                  triggerer={
+                    <span className="text-yellow-500" title="Unpublished">
+                      <RxCross2 className="text-red-600 size-4" />
+                    </span>
+                  }
+                />
+              )}
             </div>
           </div>
         ))}

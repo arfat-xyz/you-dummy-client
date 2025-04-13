@@ -4,6 +4,7 @@ import CourseCreateForm from "@/components/instructor/course-create-form";
 import DeleteLession from "@/components/instructor/delete-lesson";
 import JumbotronComponent from "@/components/jumbotron";
 import SpinnerLoader from "@/components/loader";
+import SingleCourseSkeletonLoader from "@/components/single-course-skeleton-loader";
 import axiosInstance from "@/lib/axios-instance";
 import { frontendSuccessResponse } from "@/lib/frontend-toast-response";
 import {
@@ -72,9 +73,7 @@ const CourseEditPage = ({ params: { slug } }: { params: { slug: string } }) => {
     <>
       {isLoading && !course?.name ? (
         <>
-          <div className="w-full min-h-[calc(100vh-60px)] flex justify-center items-center">
-            <SpinnerLoader size={40} />
-          </div>
+          <SingleCourseSkeletonLoader />
         </>
       ) : (
         <>

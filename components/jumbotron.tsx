@@ -8,7 +8,13 @@ const JumbotronComponent = ({
   text: string;
   className?: string;
 }) => {
-  return <h1 className={cn("jumbotron text-white", className)}>{text}</h1>;
+  return (
+    <h1
+      className={cn("jumbotron text-white  text-5xl  text-center", className)}
+    >
+      {text}
+    </h1>
+  );
 };
 
 export default JumbotronComponent;

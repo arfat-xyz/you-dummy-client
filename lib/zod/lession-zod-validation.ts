@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { stringValidation } from "./const-validation";
+import { booleanValidation, stringValidation } from "./const-validation";
 
 // Define form schema using zod
 export const lessionZodValidation = z.object({
@@ -14,6 +14,7 @@ export const lessionZodValidation = z.object({
   video: stringValidation("View").url(
     "Must be a valid video URL (e.g., https://example.com/video.mp4)"
   ),
+  free_preview: booleanValidation("Free preview"),
 });
 
 export type CreateLessionFormData = z.infer<typeof lessionZodValidation>;
