@@ -15,6 +15,7 @@ import { CheckSquare } from "lucide-react";
 import { AiOutlineCloseCircle } from "react-icons/ai";
 import { frontendSuccessResponse } from "@/lib/frontend-toast-response";
 import SingleCourseSkeletonLoader from "@/components/single-course-skeleton-loader";
+import { FaUserGear } from "react-icons/fa6";
 
 const SingleInstructorCourse = ({
   params: { slug },
@@ -41,6 +42,20 @@ const SingleInstructorCourse = ({
     } finally {
       setIsLoading(false);
     }
+  };
+
+  useEffect(() => {
+    if (course?._id) {
+      studentCount();
+    }
+  }, [course]);
+
+  const studentCount = async () => {
+    const { data } = await axiosInstance.post(`/instructor/student-count`, {
+      courseId: course?._id,
+    });
+    console.log(data, data.length);
+    setStudents(data?.data?.length);
   };
 
   const handlePublishOrUnpublishCourse = async () => {
@@ -102,7 +117,14 @@ const SingleInstructorCourse = ({
                           </Link>
                         }
                       />
-
+                      <CustomToolTipComponent
+                        toolValue={`Total students: ${students}`}
+                        triggerer={
+                          <span className="cursor-pointer">
+                            <FaUserGear size={16} />
+                          </span>
+                        }
+                      />
                       {(course?.lessons?.length as number) < 5 ? (
                         <>
                           <CustomToolTipComponent
