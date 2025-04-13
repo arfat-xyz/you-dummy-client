@@ -32,6 +32,7 @@ export default async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;
+  console.log({ token, cookieStore });
 
   // Check if the route is public (accessible for both authenticated and unauthenticated users)
   if (ROUTES.public.includes(pathname)) {
