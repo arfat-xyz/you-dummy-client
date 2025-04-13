@@ -48,7 +48,7 @@ const CourseCreateForm: React.FC<CourseCreateFormProps> = ({
   const image = watch("image");
 
   const priceOptions = Array.from({ length: 92 }, (_, i) =>
-    (i + 9.99).toFixed(2)
+    (i * 1000 + 9.99).toFixed(2)
   );
 
   // Sync initial values on edit
@@ -173,7 +173,7 @@ const CourseCreateForm: React.FC<CourseCreateFormProps> = ({
             onChange={(e) => {
               const checked = e.target.checked;
               setValue("paid", checked);
-              if (checked) setValue("price", "9.99");
+              if (checked) setValue("price", "9999.99");
               if (!checked) setValue("price", "0.00");
             }}
           />

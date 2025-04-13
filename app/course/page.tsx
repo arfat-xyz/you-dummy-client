@@ -1,20 +1,19 @@
 "use client";
-
 import JumbotronComponent from "@/components/jumbotron";
-
 import ShowCourses from "@/components/show-courses";
+import React from "react";
 
-const MainPage = () => {
+const CoursePage = () => {
   return (
     <div className="min-h-screen">
-      <JumbotronComponent text="All courses" className="rounded-lg" />
+      <JumbotronComponent text="Instructor Courses" className="rounded-lg" />
 
       <ShowCourses
-        url="/course/courses-for-all"
         singleCardRedirect="/course/"
+        url="/course/courses-for-all"
       />
     </div>
   );
 };
 
-export default MainPage;
+export default CoursePage;

@@ -11,6 +11,7 @@ import { Badge } from "@/components/ui/badge";
 import { formatDate } from "@/lib/utils";
 import ReactPlayer from "react-player";
 import Image from "next/image";
+import { loadStripe } from "@stripe/stripe-js";
 import {
   Dialog,
   DialogContent,
@@ -74,9 +75,38 @@ const SingleCoursePageForAll = ({
     router.push(`/instructor/course/view/${course?.slug}`);
   };
 
-  const handlePaidEnrollment = () => {
-    console.log(`handlePaidEnrollment`);
+  const handlePaidEnrollment = async () => {
+    try {
+      setIsEnrollmentLoaing(true);
+
+      if (!user) {
+        frontendErrorResponse("You need to be logged in to enroll.");
+        return router.push("/login");
+      }
+
+      if (enrolled) {
+        return router.push(`/user/course/${course?.slug}`);
+      }
+
+      const { data } = await axiosInstance.post(
+        `/course/paid-enrollment/${course?._id}`
+      );
+      console.log({ data: data?.data });
+      if (data?.success && data?.data) {
+        const stripe = await loadStripe(process.env.NEXT_PUBLIC_STRIPE_KEY!);
+        await stripe?.redirectToCheckout({ sessionId: data?.data });
+        console.log("Stripe session data:", data);
+      } else {
+        frontendErrorResponse("Something went wrong. Please try again.");
+      }
+    } catch (e) {
+      console.error("handlePaidEnrollment error:", e);
+      frontendErrorResponse("Enrollment failed. Please try again.");
+    } finally {
+      setIsEnrollmentLoaing(false);
+    }
   };
+
   const handleFreeEnrollment = async () => {
     try {
       setIsEnrollmentLoaing(true);

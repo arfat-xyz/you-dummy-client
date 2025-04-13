@@ -5,9 +5,10 @@ import { CourseWithIdAndInstructorNameAndId } from "@/lib/interface/course";
 import { currencyFormatter } from "@/lib/utils";
 import { CustomToolTipComponent } from "./custom-tooltip";
 
-const CourseCard: React.FC<{ course: CourseWithIdAndInstructorNameAndId }> = ({
-  course,
-}) => {
+const CourseCard: React.FC<{
+  course: CourseWithIdAndInstructorNameAndId;
+  singleCardRedirect: string;
+}> = ({ course, singleCardRedirect }) => {
   const {
     _id,
     name,
@@ -36,7 +37,7 @@ const CourseCard: React.FC<{ course: CourseWithIdAndInstructorNameAndId }> = ({
         />
 
         <div className="mt-3 space-y-1">
-          <Link href={`/course/${slug}`}>
+          <Link href={`${singleCardRedirect}${slug}`}>
             <CustomToolTipComponent
               toolValue={name}
               triggerer={
