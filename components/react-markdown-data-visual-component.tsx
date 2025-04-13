@@ -135,7 +135,6 @@ const Code: React.FC<CodeProps> = ({
   ...props
 }) => {
   const match = /language-(\w+)/.exec(className || "");
-  console.log({ inline, children, type: typeof children });
   if (inline) {
     return (
       <code className="rounded-md bg-gray-100 px-2 py-1 text-sm">

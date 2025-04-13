@@ -5,6 +5,11 @@ import axiosInstance from "@/lib/axios-instance";
 import Link from "next/link";
 import JumbotronComponent from "@/components/jumbotron";
 import { CourseWithIdAndLesson } from "@/lib/interface/course";
+import Image from "next/image";
+import { RxCross2 } from "react-icons/rx";
+
+import { FaCheck } from "react-icons/fa6";
+import { CustomToolTipComponent } from "@/components/custom-tooltip";
 
 const InstructorPage = () => {
   const [courses, setCourses] = useState<CourseWithIdAndLesson[]>([]);
@@ -57,10 +62,12 @@ const InstructorPage = () => {
             key={course._id}
             className="flex p-4 bg-white shadow-sm rounded-xl items-start gap-4"
           >
-            <img
-              src={course.image || "/course.png"}
+            <Image
+              width={80}
+              height={80}
+              src={course.image}
               alt={course.name}
-              className="w-20 h-20 rounded-full object-cover border"
+              className="size-20 rounded-full object-cover border"
             />
             <div className="flex-1">
               <div className="flex justify-between items-start flex-wrap gap-2">
@@ -90,13 +97,23 @@ const InstructorPage = () => {
                 </div>
                 <div className="flex items-center justify-center w-10 h-10">
                   {course.published ? (
-                    <span className="text-green-600" title="Published">
-                      ✔️
-                    </span>
+                    <CustomToolTipComponent
+                      toolValue="Published"
+                      triggerer={
+                        <span className="text-green-600" title="Published">
+                          <FaCheck className="text-green-600 size-4" />
+                        </span> 
+                      }
+                    />
                   ) : (
-                    <span className="text-yellow-500" title="Unpublished">
-                      ❌
-                    </span>
+                    <CustomToolTipComponent
+                      toolValue="Unpublished"
+                      triggerer={
+                        <span className="text-yellow-500" title="Unpublished">
+                          <RxCross2 className="text-red-600 size-4" />
+                        </span>
+                      }
+                    />
                   )}
                 </div>
               </div>

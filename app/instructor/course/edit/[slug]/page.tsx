@@ -34,6 +34,7 @@ const CourseEditPage = ({ params: { slug } }: { params: { slug: string } }) => {
       setIsLoading(false);
     }
   };
+
   const handleDrag = (e: DragEvent<HTMLDivElement>, index: number) => {
     e.dataTransfer.setData("draggedIndex", String(index));
   };

@@ -5,12 +5,15 @@ import axiosInstance from "@/lib/axios-instance";
 import { CourseWithIdAndInstructorNameAndId } from "@/lib/interface/course";
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { FaCheck } from "react-icons/fa6";
 import { HiMiniPencilSquare } from "react-icons/hi2";
 import Image from "next/image";
 import SpinnerLoader from "@/components/loader";
 import ReactRemarkdownDataVisualComponent from "@/components/react-markdown-data-visual-component";
 import AddORUpdateLesson from "@/components/instructor/add-or-update-lession";
+import { BsQuestionCircle } from "react-icons/bs";
+import { CheckSquare } from "lucide-react";
+import { AiOutlineCloseCircle } from "react-icons/ai";
+import { frontendSuccessResponse } from "@/lib/frontend-toast-response";
 
 const SingleInstructorCourse = ({
   params: { slug },
@@ -19,7 +22,7 @@ const SingleInstructorCourse = ({
 }) => {
   const [course, setCourse] = useState<CourseWithIdAndInstructorNameAndId>();
   const [isLoading, setIsLoading] = useState(true);
-
+  const [isPublishIsLoading, setIsPublishIsLoading] = useState(false);
   const [students, setStudents] = useState(0);
 
   useEffect(() => {
@@ -39,9 +42,32 @@ const SingleInstructorCourse = ({
     }
   };
 
+  const handlePublishOrUnpublishCourse = async () => {
+    try {
+      setIsPublishIsLoading(true);
+      const { data } = await axiosInstance.put(`/course/publish-or-unpublish`, {
+        published: !course?.published,
+        courseId: course?._id,
+      });
+      if (data?.success) {
+        frontendSuccessResponse(data?.message);
+        setCourse((prev) => {
+          if (!prev) return prev; // or throw an error if prev should never be undefined
+
+          return {
+            ...prev,
+            published: data?.data?.published,
+          };
+        });
+      }
+    } finally {
+      setIsPublishIsLoading(false);
+    }
+  };
+
   return (
     <>
-      {isLoading && !course?.name ? (
+      {isLoading && !course ? (
         <div className="w-full min-h-[calc(100vh-60px)] flex justify-center items-center">
           <SpinnerLoader size={40} />
         </div>
@@ -70,14 +96,6 @@ const SingleInstructorCourse = ({
                       {/* Add any buttons or actions here */}
 
                       <CustomToolTipComponent
-                        toolValue={`Publish`}
-                        triggerer={
-                          <Link href={`/instructor/course/edit/${slug}`}>
-                            <FaCheck />
-                          </Link>
-                        }
-                      />
-                      <CustomToolTipComponent
                         toolValue={`Edit`}
                         triggerer={
                           <Link href={`/instructor/course/edit/${slug}`}>
@@ -85,7 +103,64 @@ const SingleInstructorCourse = ({
                           </Link>
                         }
                       />
-                      {/* <IoClose /> */}
+
+                      {(course?.lessons?.length as number) < 5 ? (
+                        <>
+                          <CustomToolTipComponent
+                            toolValue={`Min 5 lessions required to publish`}
+                            triggerer={
+                              <span className="cursor-pointer">
+                                <BsQuestionCircle size={16} />
+                              </span>
+                            }
+                          />
+                        </>
+                      ) : (
+                        <>
+                          {isPublishIsLoading ? (
+                            <>
+                              <CustomToolTipComponent
+                                toolValue={`Loading...`}
+                                triggerer={
+                                  <span className="cursor-pointer">
+                                    <SpinnerLoader size={16} />
+                                  </span>
+                                }
+                              />
+                            </>
+                          ) : (
+                            <button
+                              onClick={handlePublishOrUnpublishCourse}
+                              type="button"
+                              className="cursor-pointer"
+                            >
+                              {course?.published ? (
+                                <>
+                                  <CustomToolTipComponent
+                                    toolValue={`Unpublish`}
+                                    triggerer={
+                                      <span>
+                                        <AiOutlineCloseCircle size={16} />
+                                      </span>
+                                    }
+                                  />
+                                </>
+                              ) : (
+                                <>
+                                  <CustomToolTipComponent
+                                    toolValue={`Publish`}
+                                    triggerer={
+                                      <span>
+                                        <CheckSquare size={16} />
+                                      </span>
+                                    }
+                                  />
+                                </>
+                              )}
+                            </button>
+                          )}
+                        </>
+                      )}
                     </div>
                   </div>
                   <p className="text-sm mt-1">

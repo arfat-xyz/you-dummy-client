@@ -35,7 +35,7 @@ const AddORUpdateLesson = ({
   setCourse: React.Dispatch<
     React.SetStateAction<CourseWithIdAndInstructorNameAndId | undefined>
   >;
-  setLessons: Dispatch<SetStateAction<LessonWitID[]>>;
+  setLessons?: Dispatch<SetStateAction<LessonWitID[]>>;
   instructorId: string;
   lession?: LessonWitID;
 }) => {
@@ -91,7 +91,7 @@ const AddORUpdateLesson = ({
         );
         if (data?.success) {
           console.log({ data: data?.data });
-          setLessons(data?.data);
+          if (setLessons) setLessons(data?.data);
           frontendSuccessResponse(
             data?.message || "Lesson updated successfully"
           );
