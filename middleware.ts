@@ -29,6 +29,10 @@ export const config = {
 };
 
 export default async function middleware(request: NextRequest) {
+  const backendRouter = process.env.NEXT_PUBLIC_API;
+  if (!backendRouter?.startsWith("http://localhost:")) {
+    return NextResponse.next();
+  }
   const { pathname } = request.nextUrl;
   const cookieStore = cookies();
   const token = cookieStore.get("token")?.value;

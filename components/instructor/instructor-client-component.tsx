@@ -1,12 +1,28 @@
 "use client";
-import { ReactNode } from "react";
+import { ReactNode, useEffect } from "react";
 import InstructorNav from "./instructor-nav";
+import { useRouter } from "next/navigation";
+import { hasUserRole } from "@/lib/interface/local-role-access";
+import { frontendErrorResponse } from "@/lib/frontend-toast-response";
 
 const InstructorLayoutClientComponent = ({
   children,
 }: {
   children: ReactNode;
 }) => {
+  const router = useRouter();
+  useEffect(() => {
+    if (!hasUserRole(["Instructor"])) {
+      console.log({ arfat: "araf" });
+      frontendErrorResponse("You're not authorized");
+      if (window) {
+        window.location.href = "/";
+      } else {
+        router.push("/");
+      }
+      return;
+    }
+  }, []);
   return (
     <>
       {" "}
