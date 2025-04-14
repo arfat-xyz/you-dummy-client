@@ -35,6 +35,8 @@ const SingleUserCourse = ({
   const [course, setCourse] = useState<CourseWithIdAndInstructorNameAndId>();
   const [lessons, setLessons] = useState<LessonWitID[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isCompleteOrIncompleteLoading, setIsCompleteOrIncompleteLoading] =
+    useState(false);
   const router = useRouter();
 
   const [clicked, setClicked] = useState<number>(-1);
@@ -78,27 +80,33 @@ const SingleUserCourse = ({
   }
 
   const markCompleted = async () => {
-    const { data } = await axiosInstance.post(
-      "/course/lesson-mark-as-completed",
-      {
-        courseId: course?._id,
-        lessonId: lessons[clicked]?._id,
+    try {
+      setIsCompleteOrIncompleteLoading(false);
+      const { data } = await axiosInstance.post(
+        "/course/lesson-mark-as-completed",
+        {
+          courseId: course?._id,
+          lessonId: lessons[clicked]?._id,
+        }
+      );
+      if (data?.success) {
+        console.log({
+          data: data?.data,
+          completedLessons,
+          lessons,
+          clickedlesson: lessons[clicked],
+          clickedLessonId: lessons[clicked]?._id,
+        });
+        setCompletedLessons([...completedLessons, lessons[clicked]?._id]);
       }
-    );
-    if (data?.success) {
-      console.log({
-        data: data?.data,
-        completedLessons,
-        lessons,
-        clickedlesson: lessons[clicked],
-        clickedLessonId: lessons[clicked]?._id,
-      });
-      setCompletedLessons([...completedLessons, lessons[clicked]?._id]);
+    } finally {
+      setIsCompleteOrIncompleteLoading(false);
     }
   };
 
   const markIncomplete = async () => {
     try {
+      setIsCompleteOrIncompleteLoading(false);
       const { data } = await axiosInstance.post(
         "/course/lesson-mark-as-incompleted",
         {
@@ -113,8 +121,8 @@ const SingleUserCourse = ({
         setCompletedLessons(updated);
         setUpdateState(!updateState);
       }
-    } catch (e) {
-      console.error("Error marking incomplete:", e);
+    } finally {
+      setIsCompleteOrIncompleteLoading(false);
     }
   };
 
@@ -229,19 +237,25 @@ const SingleUserCourse = ({
             <div className="bg-blue-100 border p-4 rounded mb-4">
               <div className="flex justify-between items-center">
                 <strong>{lessons[clicked]?.title}</strong>
-                <Button
-                  variant="link"
-                  className="cursor-pointer"
-                  onClick={
-                    completedLessons?.includes(lessons[clicked]?._id)
-                      ? markIncomplete
-                      : markCompleted
-                  }
-                >
-                  {completedLessons?.includes(lessons[clicked]?._id)
-                    ? "Mark as Incomplete"
-                    : "Mark as Completed"}
-                </Button>
+                {isCompleteOrIncompleteLoading ? (
+                  <>
+                    <div className="w-32 h-6 bg-gray-200 rounded-md animate-pulse" />
+                  </>
+                ) : (
+                  <Button
+                    variant="link"
+                    className="cursor-pointer"
+                    onClick={
+                      completedLessons?.includes(lessons[clicked]?._id)
+                        ? markIncomplete
+                        : markCompleted
+                    }
+                  >
+                    {completedLessons?.includes(lessons[clicked]?._id)
+                      ? "Mark as Incomplete"
+                      : "Mark as Completed"}
+                  </Button>
+                )}
               </div>
             </div>
 
