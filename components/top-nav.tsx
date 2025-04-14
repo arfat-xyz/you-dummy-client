@@ -128,10 +128,13 @@ export default function TopNav() {
                             navigationMenuTriggerStyle(),
                             "cursor-pointer flex justify-start items-start"
                           )}
-                          href="/user"
+                          asChild
                         >
-                          <FaUser className="mr-2" />
-                          Dashboard
+                          <Link href="/user">
+                            {" "}
+                            <FaUser className="mr-2" />
+                            Dashboard
+                          </Link>
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                       <NavigationMenuItem>
