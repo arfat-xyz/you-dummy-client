@@ -23,6 +23,7 @@ import {
 import { useAuth } from "@/index";
 import { myFont } from "@/public/certificate/font";
 import ReactRemarkdownDataVisualComponent from "@/components/react-markdown-data-visual-component";
+import SpinnerLoader from "@/components/loader";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -81,7 +82,7 @@ const SingleUserCourse = ({
 
   const markCompleted = async () => {
     try {
-      setIsCompleteOrIncompleteLoading(false);
+      setIsCompleteOrIncompleteLoading(true);
       const { data } = await axiosInstance.post(
         "/course/lesson-mark-as-completed",
         {
@@ -106,7 +107,7 @@ const SingleUserCourse = ({
 
   const markIncomplete = async () => {
     try {
-      setIsCompleteOrIncompleteLoading(false);
+      setIsCompleteOrIncompleteLoading(true);
       const { data } = await axiosInstance.post(
         "/course/lesson-mark-as-incompleted",
         {
@@ -239,7 +240,9 @@ const SingleUserCourse = ({
                 <strong>{lessons[clicked]?.title}</strong>
                 {isCompleteOrIncompleteLoading ? (
                   <>
-                    <div className="w-32 h-6 bg-gray-200 rounded-md animate-pulse" />
+                    <div className="w-32 flex justify-center items-center h-6 bg-gray-200 rounded-md animate-pulse">
+                      <SpinnerLoader size={16} />
+                    </div>
                   </>
                 ) : (
                   <Button

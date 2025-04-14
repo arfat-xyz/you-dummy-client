@@ -43,7 +43,7 @@ export default function TopNav() {
                 className={cn(navigationMenuTriggerStyle(), isActive("/"))}
               >
                 <MdApps className="mr-2" />
-                App
+                <span className="hidden md:block">App</span>
               </NavigationMenuLink>
             </Link>
           </NavigationMenuItem>
@@ -66,7 +66,7 @@ export default function TopNav() {
                         )}
                       >
                         <MdApps className="mr-2" />
-                        Instructor
+                        <span className="hidden md:block">Instructor</span>
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -83,7 +83,7 @@ export default function TopNav() {
                         )}
                       >
                         <CiBookmarkCheck className="mr-2" />
-                        Create Course
+                        <span className="hidden md:block">Create Course</span>
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -103,7 +103,9 @@ export default function TopNav() {
                         )}
                       >
                         <FaUsersRays className="mr-2" />
-                        Become Instructor
+                        <span className="hidden md:block">
+                          Become Instructor
+                        </span>
                       </NavigationMenuLink>
                     </Link>
                   </NavigationMenuItem>
@@ -129,7 +131,7 @@ export default function TopNav() {
                           href="/user"
                         >
                           <FaUser className="mr-2" />
-                          Dashboard
+                          <span className="hidden md:block">Dashboard</span>
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                       <NavigationMenuItem>
@@ -159,7 +161,8 @@ export default function TopNav() {
                       isActive("/login")
                     )}
                   >
-                    <CiLogin className="mr-2" /> Login
+                    <CiLogin className="mr-2" />
+                    <span className="hidden md:block">Login</span>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>
@@ -172,7 +175,8 @@ export default function TopNav() {
                     )}
                   >
                     <FaUser className="mr-2" />
-                    Register
+
+                    <span className="hidden md:block">Register</span>
                   </NavigationMenuLink>
                 </Link>
               </NavigationMenuItem>

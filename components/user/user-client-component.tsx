@@ -34,10 +34,10 @@ const UserClientComponent = ({ children }: { children: ReactNode }) => {
   return (
     <div className="w-full">
       <div className="grid grid-cols-12 gap-2">
-        <div className="col-span-2">
+        <div className="col-span-12 md:col-span-2">
           <UserNav />
         </div>
-        <div className="col-span-10">
+        <div className="col-span-12 col-span-10">
           {isLoading ? (
             <>
               <div className="w-full h-full flex justify-center items-center">
