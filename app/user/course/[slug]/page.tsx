@@ -86,6 +86,13 @@ const SingleUserCourse = ({
       }
     );
     if (data?.success) {
+      console.log({
+        data: data?.data,
+        completedLessons,
+        lessons,
+        clickedlesson: lessons[clicked],
+        clickedLessonId: lessons[clicked]?._id,
+      });
       setCompletedLessons([...completedLessons, lessons[clicked]?._id]);
     }
   };
@@ -100,7 +107,7 @@ const SingleUserCourse = ({
         }
       );
       if (data?.success) {
-        const updated = completedLessons.filter(
+        const updated = completedLessons?.filter(
           (id) => id !== lessons[clicked]?._id
         );
         setCompletedLessons(updated);
@@ -126,7 +133,7 @@ const SingleUserCourse = ({
     doc.text("course activities", 150, 330);
     doc.save(`${user?.name}.pdf`);
   };
-
+  console.log({ completedLessons });
   return (
     // Inside your component
     <div className="grid grid-cols-12 relative">
@@ -148,17 +155,17 @@ const SingleUserCourse = ({
         </div>
 
         {lessons.map((lesson, index) => {
-          const isCompleted = completedLessons.includes(lesson._id);
+          const isCompleted = completedLessons?.includes(lesson?._id);
           const isUnlocked =
             isCompleted ||
-            completedLessons.includes(lessons[index - 1]?._id) ||
+            completedLessons?.includes(lessons[index - 1]?._id) ||
             index === 0;
 
           const isActive = clicked === index;
 
           return (
             <div
-              key={lesson._id}
+              key={lesson?._id}
               className={cn(
                 "flex items-center justify-between cursor-pointer px-3 py-2 rounded",
                 isActive ? "bg-muted" : "hover:bg-muted",
@@ -171,9 +178,9 @@ const SingleUserCourse = ({
               <div className="flex items-center space-x-2">
                 <Avatar className="w-6 h-6 text-xs">{index + 1}</Avatar>
                 <span>
-                  {lesson.title.length > 25
-                    ? `${lesson.title.substring(0, 25)}...`
-                    : lesson.title}
+                  {lesson?.title.length > 25
+                    ? `${lesson?.title.substring(0, 25)}...`
+                    : lesson?.title}
                 </span>
               </div>
               <div>
@@ -189,7 +196,7 @@ const SingleUserCourse = ({
           );
         })}
 
-        {completedLessons.length === lessons.length && (
+        {completedLessons?.length === lessons.length && (
           <div className="p-4">
             <Button onClick={downloadCertificate} className="w-full">
               Download Certificate
@@ -224,13 +231,14 @@ const SingleUserCourse = ({
                 <strong>{lessons[clicked]?.title}</strong>
                 <Button
                   variant="link"
+                  className="cursor-pointer"
                   onClick={
-                    completedLessons.includes(lessons[clicked]?._id)
+                    completedLessons?.includes(lessons[clicked]?._id)
                       ? markIncomplete
                       : markCompleted
                   }
                 >
-                  {completedLessons.includes(lessons[clicked]?._id)
+                  {completedLessons?.includes(lessons[clicked]?._id)
                     ? "Mark as Incomplete"
                     : "Mark as Completed"}
                 </Button>
