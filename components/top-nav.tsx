@@ -131,7 +131,7 @@ export default function TopNav() {
                           href="/user"
                         >
                           <FaUser className="mr-2" />
-                          <span className="hidden md:block">Dashboard</span>
+                          Dashboard
                         </NavigationMenuLink>
                       </NavigationMenuItem>
                       <NavigationMenuItem>
