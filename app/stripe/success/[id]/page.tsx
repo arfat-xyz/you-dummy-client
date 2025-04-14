@@ -1,27 +1,13 @@
-"use client";
-import axiosInstance from "@/lib/axios-instance";
-import { useRouter } from "next/navigation";
-import React, { useEffect } from "react";
+import StripeSuccessClientComponent from "@/components/stripe/success-client-component";
+import { metaDataGeneratorForNormalPage } from "@/lib/meta-generator";
 
-const StripeSuccesspage = ({ params: { id } }: { params: { id: string } }) => {
-  const router = useRouter();
-  useEffect(() => {
-    if (id) successRequest();
-  }, [id]);
-  const successRequest = async () => {
-    const { data } = await axiosInstance.get(`/course/stripe-success/${id}`);
-    if (data?.success) router.push(`/user/course/${data?.data?.slug}`);
-  };
+export const metadata = metaDataGeneratorForNormalPage("Stripe success");
+const StripeSuccessPage = ({ params: { id } }: { params: { id: string } }) => {
   return (
-    <div className="flex min-h-screen items-center justify-center">
-      <div className="text-center">
-        <h1 className="text-2xl font-semibold">Processing your payment...</h1>
-        <p className="text-gray-500 mt-2">
-          Please wait while we verify your payment.
-        </p>
-      </div>
-    </div>
+    <>
+      <StripeSuccessClientComponent id={id} />
+    </>
   );
 };
 
-export default StripeSuccesspage;
+export default StripeSuccessPage;

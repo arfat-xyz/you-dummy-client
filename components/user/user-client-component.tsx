@@ -37,7 +37,7 @@ const UserClientComponent = ({ children }: { children: ReactNode }) => {
         <div className="col-span-12 md:col-span-2">
           <UserNav />
         </div>
-        <div className="col-span-12 col-span-10">
+        <div className="col-span-12 md:col-span-10">
           {isLoading ? (
             <>
               <div className="w-full h-full flex justify-center items-center">

@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import axiosInstance from "@/lib/axios-instance";
 import { CourseWithIdAndInstructorNameAndId } from "@/lib/interface/course";

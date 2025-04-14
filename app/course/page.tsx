@@ -1,8 +1,9 @@
-"use client";
 import JumbotronComponent from "@/components/jumbotron";
 import ShowCourses from "@/components/show-courses";
+import { metaDataGeneratorForNormalPage } from "@/lib/meta-generator";
 import React from "react";
 
+export const metadata = metaDataGeneratorForNormalPage("Course");
 const CoursePage = () => {
   return (
     <div className="min-h-screen">

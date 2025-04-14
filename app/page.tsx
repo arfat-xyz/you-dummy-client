@@ -1,20 +1,13 @@
-"use client";
+import MainPage from "@/components/home-page-client-component";
+import { metaDataGeneratorForNormalPage } from "@/lib/meta-generator";
 
-import JumbotronComponent from "@/components/jumbotron";
-
-import ShowCourses from "@/components/show-courses";
-
-const MainPage = () => {
+export const metadata = metaDataGeneratorForNormalPage("Home");
+const HomePage = () => {
   return (
-    <div className="min-h-screen">
-      <JumbotronComponent text="All courses" className="rounded-lg" />
-
-      <ShowCourses
-        url="/course/courses-for-all"
-        singleCardRedirect="/course/"
-      />
-    </div>
+    <>
+      <MainPage />
+    </>
   );
 };
 
-export default MainPage;
+export default HomePage;

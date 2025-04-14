@@ -1,19 +1,13 @@
-"use client";
+import InstructorCreateCourseClientComponent from "@/components/instructor/instructor-create-course-client-component";
+import { metaDataGeneratorForNormalPage } from "@/lib/meta-generator";
 
-import CourseCreateForm from "@/components/instructor/course-create-form";
-import JumbotronComponent from "@/components/jumbotron";
-
-// Define types for the state values
-
-const CourseCreate = () => {
+export const metadata = metaDataGeneratorForNormalPage("Create Course");
+const InstructorCreateCoursePage = () => {
   return (
     <>
-      <JumbotronComponent text="Create Course" />
-      <div className="px-4 py-6">
-        <CourseCreateForm />
-      </div>
+      <InstructorCreateCourseClientComponent />
     </>
   );
 };
 
-export default CourseCreate;
+export default InstructorCreateCoursePage;
