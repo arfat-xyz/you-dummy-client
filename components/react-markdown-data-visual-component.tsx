@@ -27,6 +27,7 @@ const ReactRemarkdownDataVisualComponent = ({
 }: {
   context: string;
 }) => {
+  console.log(context.length);
   return (
     <ReactMarkdown
       remarkPlugins={[remarkGfm]}
@@ -142,9 +143,9 @@ const Code: React.FC<CodeProps> = ({
       </code>
     );
   }
-  if (typeof children === "string" && children.length < 100) return children;
+  if (typeof children === "string" && children.length < 40) return children;
   return (
-    <div className="relative my-4">
+    <div className="relative my-4 overflow-x-auto">
       <SyntaxHighlighter
         style={a11yDark}
         language={match ? match[1] : "javascript"}
@@ -154,7 +155,8 @@ const Code: React.FC<CodeProps> = ({
           style: {
             padding: "1rem",
             borderRadius: "5px",
-            overflowX: "auto",
+            overflowX: "auto", // Ensure this is here for horizontal scrolling
+            width: "100%", // Make sure the code block is confined within the container
           },
         }}
       >
