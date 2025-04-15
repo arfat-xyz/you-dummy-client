@@ -263,7 +263,7 @@ const SingleCoursePageForAllClientComponent = ({ slug }: { slug: string }) => {
                           <h3 className="font-semibold text-lg">
                             {(review.user as IUser)?.name || "Anonymous"}
                           </h3>
-                          <span className="text-sm text-gray-500">
+                          <span className="text-sm text-gray-500 hidden md:block">
                             {formatDate(review.createdAt).split(" at")[0]}
                           </span>
                         </div>
