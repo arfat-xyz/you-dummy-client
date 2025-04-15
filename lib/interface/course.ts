@@ -1,4 +1,5 @@
 import { CreateLessionFormData } from "../zod/lession-zod-validation";
+import { IUser } from "./token-user-interface";
 
 export interface CourseCreateState {
   name: string;
@@ -28,7 +29,19 @@ export interface CourseWithIdAndInstructorNameAndId
     _id: string;
     name: string;
   };
+  averageRating: number;
+  numberOfRatings: number;
 }
+
+export type IReview = {
+  _id: string;
+  user: string | IUser;
+  name: string;
+  rating: number;
+  comment: string;
+  course: string | CourseCreateState;
+  createdAt: string;
+};
 export interface LessonWitID extends CreateLessionFormData {
   _id: string;
 }

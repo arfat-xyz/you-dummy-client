@@ -1,16 +1,26 @@
 import InstructorViewCourseClientComponent from "@/components/instructor/instructor-view-course-client-component";
-import axiosInstance from "@/lib/axios-instance";
+import { axiosServer } from "@/lib/axios-instance";
 import { generateCourseMetadata } from "@/lib/meta-generator";
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 
 export async function generateMetadata({
   params: { slug },
 }: {
   params: { slug: string };
 }): Promise<Metadata> {
-  const { data } = await axiosInstance.get(`/course/single-course/${slug}`);
+  try {
+    const { data } = await axiosServer.get(`/course/single-course/${slug}`);
+    // If no course data found, redirect to Not Found page
+    if (!data?.data) {
+      return notFound(); // Redirects to the default 404 page
+    }
 
-  return generateCourseMetadata(data?.data);
+    return generateCourseMetadata(data?.data);
+  } catch (error) {
+    console.error("Error fetching course data:", error);
+    return notFound(); // In case of error, redirect to Not Found page
+  }
 }
 
 const InstructorSingleCoursePage = ({

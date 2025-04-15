@@ -28,6 +28,7 @@ const ShowCourses = ({
       );
 
       if (data?.data?.length) {
+        console.log({ data: data?.data });
         setCourses((prev) => {
           const existingIds = new Set(prev.map((course) => course._id));
           const uniqueNewCourses = data.data.filter(

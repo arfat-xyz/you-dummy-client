@@ -3,6 +3,7 @@ import ReactRemarkdownDataVisualComponent from "@/components/react-markdown-data
 import axiosInstance from "@/lib/axios-instance";
 import {
   CourseWithIdAndInstructorNameAndId,
+  IReview,
   LessonWitID,
 } from "@/lib/interface/course";
 import { useEffect, useState } from "react";
@@ -25,16 +26,19 @@ import axios from "axios";
 import { Button } from "@/components/ui/button";
 import { useAuth } from "@/index";
 import { MdSafetyCheck } from "react-icons/md";
+import { Rating } from "@smastrom/react-rating";
 import {
   frontendErrorResponse,
   frontendSuccessResponse,
 } from "@/lib/frontend-toast-response";
+import { IUser } from "@/lib/interface/token-user-interface";
 
 const SingleCoursePageForAllClientComponent = ({ slug }: { slug: string }) => {
   const { user } = useAuth();
   const [course, setCourse] = useState<CourseWithIdAndInstructorNameAndId>();
   const [lessons, setLessons] = useState<LessonWitID[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [reviews, setReviews] = useState<IReview[]>([]);
   const router = useRouter();
   const [enrolled, setEnrolled] = useState(false);
   const [isEnrollmentLoaing, setIsEnrollmentLoaing] = useState(false);
@@ -42,14 +46,14 @@ const SingleCoursePageForAllClientComponent = ({ slug }: { slug: string }) => {
   useEffect(() => {
     loadCourse();
   }, [slug]);
-
   const loadCourse = async () => {
     try {
       setIsLoading(true);
       const { data } = await axiosInstance.get(`/course/single-course/${slug}`);
       if (data?.success && data?.data) {
-        setCourse(data.data);
-        setLessons(data.data.lessons);
+        setCourse(data?.data);
+        setLessons(data?.data?.lessons);
+        setReviews(data?.data?.reviews);
         await axios
           .get(
             `${process.env.NEXT_PUBLIC_API}/course/check-enrollemnt/${data?.data?._id}`,
@@ -138,8 +142,8 @@ const SingleCoursePageForAllClientComponent = ({ slug }: { slug: string }) => {
 
   return (
     <>
-      <div className="jumbotron grid grid-cols-12 gap-6 relative">
-        <div className="col-span-12 md:col-span-8">
+      <div className="jumbotron grid grid-cols-12  gap-6 relative">
+        <div className="order-2 md:order-1 col-span-12 md:col-span-8">
           <h1 className="text-2xl font-bold">{course.name}</h1>
           <p>
             <ReactRemarkdownDataVisualComponent
@@ -156,7 +160,7 @@ const SingleCoursePageForAllClientComponent = ({ slug }: { slug: string }) => {
           <p>Last updated {formatDate(course?.updatedAt as string)}</p>
         </div>
 
-        <div className="col-span-12 md:col-span-4  md:sticky top-12 self-start">
+        <div className="order-1 md:order-2 col-span-12 md:col-span-4  md:sticky top-12 self-start">
           {lessons.length > 0 && lessons[0].free_preview ? (
             <Dialog>
               <DialogTrigger asChild>
@@ -227,7 +231,62 @@ const SingleCoursePageForAllClientComponent = ({ slug }: { slug: string }) => {
           </Button>
         </div>
       </div>
+      <div className="my-8">
+        <div className="">
+          <h2 className="text-2xl font-bold text-gray-800">Students Reviews</h2>
+          <div className="mt-6">
+            {reviews.length === 0 ? (
+              <p className="text-gray-500">
+                No reviews yet. Be the first to leave a review!
+              </p>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+                {reviews.map((review) => (
+                  <div
+                    key={review._id}
+                    className="bg-white rounded-lg shadow-md p-4 mb-6"
+                  >
+                    <div className="flex items-start space-x-4">
+                      {/* User Profile Picture */}
+                      <div className="size-12 border-2 rounded-full overflow-hidden">
+                        <Image
+                          width={48}
+                          height={48}
+                          src={(review.user as IUser)?.picture || "/logo.png"} // Default avatar if no profile picture
+                          alt={(review.user as IUser)?.name || "Anonymous"}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
 
+                      <div className="flex-grow">
+                        <div className="flex items-center justify-between">
+                          <h3 className="font-semibold text-lg">
+                            {(review.user as IUser)?.name || "Anonymous"}
+                          </h3>
+                          <span className="text-sm text-gray-500">
+                            {formatDate(review.createdAt).split(" at")[0]}
+                          </span>
+                        </div>
+                        <div className="flex items-center mt-2">
+                          <Rating
+                            style={{ maxWidth: 150 }}
+                            value={review.rating}
+                          />
+
+                          <span className="text-gray-600">
+                            {review.rating} / 5
+                          </span>
+                        </div>
+                        <p className="mt-2 text-gray-700">{review.comment}</p>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
       {/* Only render if course exists */}
       <SingleCourseLessons course={course} lessons={lessons} />
     </>

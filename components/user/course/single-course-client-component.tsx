@@ -4,15 +4,8 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import dynamic from "next/dynamic";
 import jsPDF from "jspdf";
-import {
-  CheckCircle,
-  MinusCircle,
-  PlayCircle,
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { PlayCircle, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Avatar } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 import SingleCourseSkeletonLoader from "@/components/single-course-skeleton-loader";
 import axiosInstance from "@/lib/axios-instance";
@@ -24,6 +17,9 @@ import { useAuth } from "@/index";
 import { myFont } from "@/public/certificate/font";
 import ReactRemarkdownDataVisualComponent from "@/components/react-markdown-data-visual-component";
 import SpinnerLoader from "@/components/loader";
+import { ReviewModal } from "./review-modal";
+import UserSingleCourseLessonList from "./user-single-course-lesson-lists";
+import DownloadContentAsPdf from "./download-context-as-pdf";
 
 const ReactPlayer = dynamic(() => import("react-player"), { ssr: false });
 
@@ -40,6 +36,7 @@ const SingleUserCourseClientComponent = ({ slug }: { slug: string }) => {
   const [collapsed, setCollapsed] = useState(false);
   const [completedLessons, setCompletedLessons] = useState<string[]>([]);
   const [updateState, setUpdateState] = useState(false);
+  const [showReviewModal, setShowReviewModal] = useState(true);
 
   useEffect(() => {
     if (course?._id) loadCompletedLessons();
@@ -65,6 +62,7 @@ const SingleUserCourseClientComponent = ({ slug }: { slug: string }) => {
       if (data?.success && data?.data) {
         setCourse(data.data);
         setLessons(data.data.lessons);
+        setShowReviewModal(!data?.data?.userAlreadyReviewd);
       } else {
         router.push("/"); // Redirect if course not found
       }
@@ -169,35 +167,17 @@ const SingleUserCourseClientComponent = ({ slug }: { slug: string }) => {
           const isActive = clicked === index;
 
           return (
-            <div
-              key={lesson?._id}
-              className={cn(
-                "flex items-center justify-between cursor-pointer px-3 py-2 rounded",
-                isActive ? "bg-muted" : "hover:bg-muted",
-                !isUnlocked && "opacity-50 cursor-not-allowed"
-              )}
-              onClick={() => {
-                if (isUnlocked) setClicked(index);
-              }}
-            >
-              <div className="flex items-center space-x-2">
-                <Avatar className="w-6 h-6 text-xs">{index + 1}</Avatar>
-                <span>
-                  {lesson?.title.length > 25
-                    ? `${lesson?.title.substring(0, 25)}...`
-                    : lesson?.title}
-                </span>
-              </div>
-              <div>
-                {isCompleted ? (
-                  <CheckCircle className="w-4 h-4 text-green-600" />
-                ) : !isUnlocked ? (
-                  <MinusCircle className="w-4 h-4 text-gray-400" />
-                ) : (
-                  <MinusCircle className="w-4 h-4 text-red-500" />
-                )}
-              </div>
-            </div>
+            <>
+              <UserSingleCourseLessonList
+                key={index}
+                index={index}
+                isCompleted={isCompleted}
+                isActive={isActive}
+                isUnlocked={isUnlocked}
+                lesson={lesson}
+                setClicked={setClicked}
+              />
+            </>
           );
         })}
 
@@ -207,6 +187,23 @@ const SingleUserCourseClientComponent = ({ slug }: { slug: string }) => {
               Download Certificate
             </Button>
           </div>
+        )}
+
+        {showReviewModal ? (
+          <>
+            <div className="p-4">
+              <ReviewModal
+                setShowReviewModal={setShowReviewModal}
+                courseId={course?._id as string}
+              />
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="p-4">
+              <p>{`You've alredy reviewed this course`}</p>
+            </div>
+          </>
         )}
       </div>
 
@@ -234,27 +231,34 @@ const SingleUserCourseClientComponent = ({ slug }: { slug: string }) => {
             <div className="bg-blue-100 border p-4 rounded mb-4">
               <div className="flex justify-between items-center">
                 <strong>{lessons[clicked]?.title}</strong>
-                {isCompleteOrIncompleteLoading ? (
-                  <>
-                    <div className="w-32 flex justify-center items-center h-6 bg-gray-200 rounded-md animate-pulse">
-                      <SpinnerLoader size={16} />
-                    </div>
-                  </>
-                ) : (
-                  <Button
-                    variant="link"
-                    className="cursor-pointer"
-                    onClick={
-                      completedLessons?.includes(lessons[clicked]?._id)
-                        ? markIncomplete
-                        : markCompleted
-                    }
-                  >
-                    {completedLessons?.includes(lessons[clicked]?._id)
-                      ? "Mark as Incomplete"
-                      : "Mark as Completed"}
-                  </Button>
-                )}
+                <div className="flex justify-center items-center">
+                  {" "}
+                  <DownloadContentAsPdf
+                    content={lessons[1].content}
+                    name={lessons[1].title}
+                  />
+                  {isCompleteOrIncompleteLoading ? (
+                    <>
+                      <div className="w-32 flex justify-center items-center h-6 bg-gray-200 rounded-md animate-pulse">
+                        <SpinnerLoader size={16} />
+                      </div>
+                    </>
+                  ) : (
+                    <Button
+                      variant="link"
+                      className="cursor-pointer"
+                      onClick={
+                        completedLessons?.includes(lessons[clicked]?._id)
+                          ? markIncomplete
+                          : markCompleted
+                      }
+                    >
+                      {completedLessons?.includes(lessons[clicked]?._id)
+                        ? "Mark as Incomplete"
+                        : "Mark as Completed"}
+                    </Button>
+                  )}
+                </div>
               </div>
             </div>
 

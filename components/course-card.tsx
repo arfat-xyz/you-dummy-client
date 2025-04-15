@@ -4,13 +4,14 @@ import Image from "next/image";
 import { CourseWithIdAndInstructorNameAndId } from "@/lib/interface/course";
 import { currencyFormatter } from "@/lib/utils";
 import { CustomToolTipComponent } from "./custom-tooltip";
+import { Rating } from "@smastrom/react-rating";
+import { Star } from "@smastrom/react-rating";
 
 const CourseCard: React.FC<{
   course: CourseWithIdAndInstructorNameAndId;
   singleCardRedirect: string;
 }> = ({ course, singleCardRedirect }) => {
   const {
-    _id,
     name,
     instructor,
     price,
@@ -20,13 +21,11 @@ const CourseCard: React.FC<{
     slug,
     published,
     lessons,
+    averageRating,
+    numberOfRatings,
   } = course;
-
   return (
-    <div
-      key={_id}
-      className="flex flex-col justify-between p-4 bg-white shadow-sm rounded-xl hover:shadow-lg transition-all duration-300"
-    >
+    <div className="flex flex-col justify-between p-4 bg-white shadow-sm rounded-xl hover:shadow-lg transition-all duration-300 h-full">
       <div>
         <Image
           width={400}
@@ -36,7 +35,7 @@ const CourseCard: React.FC<{
           className="w-full h-48 object-cover rounded-md border"
         />
 
-        <div className="mt-3 space-y-1">
+        <div className="mt-3 space-y-2">
           <Link href={`${singleCardRedirect}${slug}`}>
             <CustomToolTipComponent
               toolValue={name}
@@ -51,8 +50,29 @@ const CourseCard: React.FC<{
           <p className="text-sm text-gray-700 truncate">
             By {instructor?.name}
           </p>
+
+          {/* Rating Display */}
+          <div className="flex items-center gap-1">
+            <Rating
+              value={averageRating || 0}
+              readOnly
+              style={{ maxWidth: 80 }}
+              itemStyles={{
+                itemShapes: Star,
+                activeFillColor: "#f59e0b", // amber-500
+                inactiveFillColor: "#d1d5db", // gray-300
+              }}
+            />
+            <span className="text-sm text-gray-600">
+              {averageRating?.toFixed(1) || "0.0"}
+              <span className="text-xs text-gray-500 ml-1">
+                ({numberOfRatings || 0})
+              </span>
+            </span>
+          </div>
+
           <div className="text-sm text-gray-600 truncate">{category}</div>
-          <div className="text-3xl  font-bold">
+          <div className="text-3xl font-bold">
             {paid
               ? currencyFormatter({ amount: price, currency: "BDT" })
               : "Free"}
@@ -75,18 +95,6 @@ const CourseCard: React.FC<{
           )}
         </div>
       </div>
-
-      {/* <div className="pt-3">
-        {published ? (
-          <span className="text-green-600" title="Published">
-            <FaCheck className="text-green-600 size-4" />
-          </span>
-        ) : (
-          <span className="text-yellow-500" title="Unpublished">
-            <RxCross2 className="text-red-600 size-4" />
-          </span>
-        )}
-      </div> */}
     </div>
   );
 };
