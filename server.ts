@@ -9,7 +9,7 @@ const app = next({ dev });
 const handle = app.getRequestHandler();
 
 // Backend server URL
-const API_URL = `https://u-dummy-server.vercel.app/api/v1`;
+const API_URL = `https://you-dummy-server.vercel.app/api/v1`;
 
 app.prepare().then(() => {
   const server = createServer((req, res) => {
